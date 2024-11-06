@@ -1,6 +1,9 @@
 <script setup>
 import { ref } from "vue";
 const msg = ref("Hello from SD19310");
+const newItem = ref("");
+const newItemPriority = ref("low");
+
 const items = ref([
   { id: 1, label: "1 product A" },
   { id: 2, label: "3 product B" },
@@ -11,15 +14,40 @@ const items = ref([
 <template>
   <h1>{{ msg }}</h1>
   <br />
-  <input v-model="msg" />
+
+  <input
+    type="text"
+    placeholder="Add an Item"
+    v-model="newItem"
+  />
+  {{ newItem }} <br />
+
+  Priority:
+  <label>
+    <input
+      type="radio"
+      value="low"
+      v-model="newItemPriority"
+    />
+    Low
+  </label>
+  <label>
+    <input
+      type="radio"
+      value="hight"
+      v-model="newItemPriority"
+    />
+    Hight
+  </label>
   <br />
-  <input v-model="msg" />
+  {{ newItemPriority }}
+
   <ul>
     <li
-      v-for="item in items"
-      :key="item.id"
+      v-for="({ id, label }, index) in items"
+      :key="id"
     >
-      {{ item.label }}
+      {{ index + 1 }} {{ label }} 😂
     </li>
   </ul>
 </template>
