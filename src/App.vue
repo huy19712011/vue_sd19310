@@ -1,6 +1,9 @@
 <script setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 const msg = ref("Hello from SD19310");
+const characterCount = computed(() => {
+  return newItem.value.length;
+});
 const newItem = ref("");
 const newItemPriority = ref("low");
 
@@ -15,14 +18,22 @@ const saveItem = () => {
 };
 
 const items = ref([
-  // { id: 1, label: "1 product A" },
-  // { id: 2, label: "3 product B" },
-  // { id: 3, label: "6 product C" },
+  { id: 1, label: "1 product A", purchased: false, highPriority: false },
+  { id: 2, label: "3 product B", purchased: false, highPriority: false },
+  { id: 3, label: "6 product C", purchased: true, highPriority: true },
 ]);
 
-const doEdit = (e) => {
-  editing.value = e;
+const reverseItems = computed(() => {
+  return [...items.value].reverse();
+});
+
+const doEdit = () => {
+  editing.value = !editing.value;
   newItem.value = "";
+};
+
+const togglePurchased = (item) => {
+  item.purchased = !item.purchased;
 };
 </script>
 
@@ -32,13 +43,14 @@ const doEdit = (e) => {
     <br />
     <button
       v-if="editing"
-      @click="doEdit(false)"
+      @click="doEdit()"
     >
       Cancel
     </button>
     <button
+      class="btn btn-primary"
       v-else
-      @click="doEdit(true)"
+      @click="doEdit()"
     >
       Add Item
     </button>
@@ -109,11 +121,16 @@ const doEdit = (e) => {
 
     <button v-bind:disabled="newItem.length < 3">Save Item</button>
   </form>
+  <br />
+  {{ characterCount }}
+  <br />
 
   <ul>
     <li
-      v-for="({ id, label }, index) in items"
+      v-for="({ id, label, purchased, highPriority }, index) in reverseItems"
+      @click="togglePurchased(items[index])"
       :key="id"
+      :class="{ strikeout: purchased, priority: highPriority }"
     >
       {{ index + 1 }} {{ label }} 😂
     </li>
